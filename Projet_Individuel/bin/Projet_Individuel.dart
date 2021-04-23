@@ -8,7 +8,7 @@ void main(List<String> arguments) {
   //pour tester la fonction premettant de lancer les dés
   lanceDes('jean');
 
-  // c'est parti!
+  // c'est parti
 
   print('entrer votre pseudo : ');
   var pseudo = stdin.readLineSync();
