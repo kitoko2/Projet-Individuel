@@ -2,9 +2,13 @@ import 'dart:math';
 import 'dart:io';
 
 void main(List<String> arguments) {
-  int i = 1;
-  Bot bot1 = Bot(1, 100);
-  // lanceDes('jean');
+  var i = 1;
+  var bot1 = Bot(1, 100);
+
+  //pour tester la fonction premettant de lancer les dés
+  lanceDes('jean');
+
+  // c'est parti!
 
   print('entrer votre pseudo : ');
   var pseudo = stdin.readLineSync();
@@ -19,7 +23,7 @@ void main(List<String> arguments) {
     print('FIN TOUR $i');
     i++;
   } while (bot1.health > 0);
-  print('\nVOUS AVEZ GAGNEZ\n');
+  print('\nVOUS AVEZ GAGNEZ LA PARTIE!\n');
 }
 
 class Bot {
