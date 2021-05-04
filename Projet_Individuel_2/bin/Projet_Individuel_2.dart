@@ -4,6 +4,7 @@ import 'dart:io';
 void main(List<String> arguments) {
   var i = 1;
   var run = true;
+  //objet de type bot
   var bot = Bot(1, 100);
   //objet de type player
   var player1 = Player('', 1, 100);
@@ -23,18 +24,27 @@ void main(List<String> arguments) {
         print('\n${player1.pseudo} ATTAQUE EN PREMIER\n');
         print('----$pseudo APPUIYER SUR ENTRER POUR LANCER LES DÉS----\n');
         stdin.readLineSync();
-        attaquePlayerVersBot(player1, bot);
-        infoBot(bot);
-        attaqueBotVersPlayer(bot, player1);
-        infoPlayer(player1);
+        print(
+          'pour utiliser la super attaque appuiyer sur y sinon appuiyer entrer\n*****ATTENTION CECI PEUT VOUS COUTEZ LA VIE******',
+        );
+        var saisi = stdin.readLineSync();
+        if (saisi == 'y' || saisi == 'y'.toUpperCase()) {
+          player1.superAttaque(bot);
+        } else {
+          player1.attaquePlayerVersBot(bot);
+        }
+
+        bot.infoBot();
+        bot.attaqueBotVersPlayer(player1);
+        player1.infoPlayer();
         //voir les infos du player1(santé...) après le coup du bot
         break;
       default:
         print('\nBOT ATTAQUE EN PREMIER\n');
-        attaqueBotVersPlayer(bot, player1);
-        infoPlayer(player1);
-        attaquePlayerVersBot(player1, bot);
-        infoBot(bot);
+        bot.attaqueBotVersPlayer(player1);
+        player1.infoPlayer();
+        player1.attaquePlayerVersBot(bot);
+        bot.infoBot();
       //voir les infos du bot(santé...) après le coup du player
     }
     /*
@@ -70,6 +80,15 @@ class Bot {
     this.force = force;
     this.health = health;
   }
+  void infoBot() {
+    print('bot | santé: ${this.health}  | force: ${this.force}');
+  }
+
+  void attaqueBotVersPlayer(Player p) {
+    var coup = this.force * lanceDes('bot');
+    print('le bot assène un coup à ${p.pseudo} avec une force de $coup');
+    p.health -= coup;
+  }
 }
 
 class Player {
@@ -77,29 +96,31 @@ class Player {
   int force;
   int health;
   Player(this.pseudo, this.force, this.health);
+  void infoPlayer() {
+    print('${this.pseudo}  |  santé: ${this.health}  | force: ${this.force}');
+  }
+
+  void attaquePlayerVersBot(Bot b) {
+    var coup = this.force * lanceDes(this.pseudo);
+    print('${this.pseudo} assène un coup sur le bot avec une force de $coup');
+    b.health -= coup;
+  }
+
+  void superAttaque(Bot b) {
+    var coup = 5 * lanceDes(this.pseudo);
+    var a = aleat(pseudo) * 5;
+    print(
+      'SUPER ATTAQUE (*5) ${this.pseudo} assène un coup sur le bot avec une super force de $coup',
+    );
+    this.health -= a;
+    print(
+      '\nALEAT DE LA SUPER ATTAQUE [ -$a] Tes points de santés sont désormains : ${this.health}\n',
+    );
+    b.health -= coup;
+  }
 }
 
 //fonctions
-
-void infoPlayer(Player p) {
-  print('${p.pseudo}  |  santé: ${p.health}  | force: ${p.force}');
-}
-
-void infoBot(Bot b) {
-  print('bot | santé: ${b.health}  | force: ${b.force}');
-}
-
-void attaquePlayerVersBot(Player p, Bot b) {
-  var coup = lanceDes(p.pseudo);
-  print('${p.pseudo} assène un coup sur le bot avec une force de $coup');
-  b.health -= coup;
-}
-
-void attaqueBotVersPlayer(Bot b, Player p) {
-  var coup = lanceDes('bot');
-  print('le bot assène un coup à ${p.pseudo} avec une force de $coup');
-  p.health -= coup;
-}
 
 int lanceDes(String name) {
   final r1 = Random();
@@ -109,3 +130,12 @@ int lanceDes(String name) {
   print('$name a lancé les dés et a obtenu la valeur $result');
   return result;
 }
+
+int aleat(String name) {
+  final r1 = Random();
+
+  var aleat = r1.nextInt(5);
+
+  return aleat;
+} //aleat est la fonction pour determiner combien de point de vie sera enlevé au player
+//après la super attaque
